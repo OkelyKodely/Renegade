@@ -16,42 +16,24 @@ namespace WindowsFormsApplication4
         System.Collections.Generic.List<LeadBullies> B = null;
         Soldier soldier = null;
         WMPLib.WindowsMediaPlayer wmp;
-        public Lead(Panel p, int X, int Y, Soldier soldier)
+        Scroller scroller;
+        public Lead(Scroller scroller, Graphics g, int X, int Y, Soldier soldier, Image image)
         {
-            try
-            {
-                wmp = new WMPLib.WindowsMediaPlayer();
-                wmp.URL = "ak.wav";
-            }
-            catch (Exception e)
-            {
-            }
+            this.scroller = scroller;
             this.soldier = soldier;
             x = X; y = Y;
-            pee = p; g = pee.CreateGraphics();
-            try
-            {
-                myBullet = Image.FromFile(Environment.CurrentDirectory + "\\bull.png");
-            }
-            catch (Exception e)
-            {
-            }
+            this.g = g;
+            myBullet = image;
         }
         public System.Collections.Generic.List<LeadBullies> Sheut()
         {
             System.Collections.Generic.List<LeadBullies> bBs = new System.Collections.Generic.List<LeadBullies>();
-            if (x < 1000)
+            if (x < 1280 && x > 0)
             {
-                countBulleties += 5;
+                countBulleties += 17;
                 for (int i = 0; i < countBulleties; i++)
                 {
-                    try
-                    {
-                        wmp.controls.play();
-                    }
-                    catch (Exception e)
-                    {
-                    }
+                    scroller.playSound("ak.wav");
                     bBs.Add(new LeadBullies(x, y));
                 }
             }
@@ -62,8 +44,8 @@ namespace WindowsFormsApplication4
             Random rnd = new Random();
             for (int j = 0; j < bullies.Count; j++)
             {
-                int xrand = -1*rnd.Next(5) + xr;
-                int yrand = rnd.Next(3) - rnd.Next(3) + yr;
+                int xrand = -1*rnd.Next(430) + xr;
+                int yrand = rnd.Next(173) - rnd.Next(173) + yr;
                 bullies[j].messWithYa();
                 bullies[j].moveittoit(xrand, yrand);
             }
@@ -78,6 +60,7 @@ namespace WindowsFormsApplication4
                 {
                     if (soldier.One_Y <= B[m].whereami.Y && soldier.Two_Y >= B[m].whereami.Y)
                     {
+                        soldier.experiencePain(); 
                         Boolean isHeDead = soldier.experiencePain();
                         B[m].dead = true;
                         if (isHeDead)
@@ -94,7 +77,13 @@ namespace WindowsFormsApplication4
             System.Windows.Forms.Timer timer1 = new System.Windows.Forms.Timer();
             timer1.Interval = 1;
             timer1.Tick += new EventHandler(moveTheBullets);
-            timer1.Start();
+            try
+            {
+                timer1.Start();
+            }
+            catch (Exception e)
+            {
+            }
         }
         private void moveTheBullets(object sender, EventArgs e)
         {
@@ -105,13 +94,13 @@ namespace WindowsFormsApplication4
                     B[k].move();
                     try
                     {
-                        g.DrawImage(myBullet, B[k].whereami.X, B[k].whereami.Y, 16, 16);
+                        g.DrawImage(myBullet, B[k].whereami.X, B[k].whereami.Y, 67, 67);
                     }
                     catch (Exception ex)
                     {
                     }
                 }
-                if (B[k].whereami.X < 0)
+                if (B[k].whereami.X < 0 || B[k].timetolive <= 0)
                 {
                     B.Remove(B[k]);
                 }
@@ -124,6 +113,7 @@ namespace WindowsFormsApplication4
         public System.Drawing.Point whereami = new System.Drawing.Point(100, 400);
         int movex;
         int movey;
+        public int timetolive = 5;
         public bool dead = false;
         public LeadBullies(int x, int y)
         {
@@ -140,6 +130,7 @@ namespace WindowsFormsApplication4
         }
         public void move()
         {
+            timetolive-=2;
             whereami.X += this.movex;
             whereami.Y += this.movey;
         }

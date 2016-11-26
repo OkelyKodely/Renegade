@@ -19,20 +19,15 @@ public class Antagonist
     public Image image;
     private Panel pnl = null;
 
+    private Scroller scroller;
+
     Graphics g;
 
-    public Antagonist(Panel p)
+    public Antagonist(Scroller scroller, Graphics g, Image image)
     {
-        try
-        {
-            wmp = new WMPLib.WindowsMediaPlayer();
-        }
-        catch (Exception e)
-        {
-        }
-        pnl = p; 
-        g = pnl.CreateGraphics();
-        image = Image.FromFile(Environment.CurrentDirectory + "\\ant.png");
+        this.scroller = scroller;
+        this.g = g;
+        this.image = image;
     }
 
     WMPLib.WindowsMediaPlayer wmp;
@@ -40,17 +35,10 @@ public class Antagonist
     public bool experiencePain()
     {
         life--;
-        if (life < 0)
+        if (life <= 0)
         {
-            try
-            {
-                wmp.URL = "explosion.wav";
-                wmp.controls.play();
-            }
-            catch (Exception e)
-            {
-            }
             isDead = true;
+            scroller.StartEnemies();
         }
         return isDead;
     }
@@ -96,33 +84,33 @@ public class Antagonist
 
     public void MoveLeft()
     {
-        One_X -= 5;
-        Two_X -= 5;
-        Three_X -= 5;
-        Four_X -= 5;
+        One_X -= 6;
+        Two_X -= 6;
+        Three_X -= 6;
+        Four_X -= 6;
     }
 
     public void MoveRight()
     {
-        One_X += 2;
-        Two_X += 2;
-        Three_X += 2;
-        Four_X += 2;
+        One_X += 3;
+        Two_X += 3;
+        Three_X += 3;
+        Four_X += 3;
     }
 
     public void MoveUp()
     {
-        One_Y -= 2;
-        Two_Y -= 2;
-        Three_Y -= 2;
-        Four_Y -= 2;
+        One_Y -= 4;
+        Two_Y -= 4;
+        Three_Y -= 4;
+        Four_Y -= 4;
     }
 
     public void MoveDown()
     {
-        One_Y += 2;
-        Two_Y += 2;
-        Three_Y += 2;
-        Four_Y += 2;
+        One_Y += 5;
+        Two_Y += 5;
+        Three_Y += 5;
+        Four_Y += 5;
     }
 }

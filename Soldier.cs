@@ -6,7 +6,7 @@ namespace WindowsFormsApplication4
 {
     class Soldier
     {
-        public int life = 50000;
+        public Int64 life = 50000;
         private bool isDead = false;
 
         public int One_X = 1280;
@@ -23,14 +23,14 @@ namespace WindowsFormsApplication4
 
         Graphics g;
 
-        public Soldier(Panel p)
+        public Soldier(Panel p, Image image)
         {
             pnl = p; 
             g = pnl.CreateGraphics();
-            image = Image.FromFile(Environment.CurrentDirectory + "\\soldier.png");
+            this.image = image;
         }
 
-        public int Life()
+        public Int64 Life()
         {
             return this.life;
         }
@@ -52,9 +52,8 @@ namespace WindowsFormsApplication4
             {
                 try
                 {
-                    g.DrawImage(image, Four_X, Four_Y, 148, 148);
-                }
-                catch (Exception x)
+                    g.DrawImage(image, Four_X, Four_Y, 228, 228);
+                } catch(Exception e)
                 {
                 }
             }
@@ -75,46 +74,46 @@ namespace WindowsFormsApplication4
 
         public void SetLocation(int x, int y)
         {
-            One_X = x + 148;
-            Two_X = x + 148;
+            One_X = x + 228;
+            Two_X = x + 228;
             Three_X = x;
             Four_X = x;
             One_Y = y;
-            Two_Y = y + 148;
-            Three_Y = y + 148;
+            Two_Y = y + 228;
+            Three_Y = y + 228;
             Four_Y = y;
         }
 
         public void MoveLeft()
         {
-            One_X -= 40;
-            Two_X -= 40;
-            Three_X -= 40;
-            Four_X -= 40;
+            One_X -= 60;
+            Two_X -= 60;
+            Three_X -= 60;
+            Four_X -= 60;
         }
 
         public void MoveRight()
         {
-            One_X += 40;
-            Two_X += 40;
-            Three_X += 40;
-            Four_X += 40;
+            One_X += 60;
+            Two_X += 60;
+            Three_X += 60;
+            Four_X += 60;
         }
 
         public void MoveUp()
         {
-            One_Y -= 40;
-            Two_Y -= 40;
-            Three_Y -= 40;
-            Four_Y -= 40;
+            One_Y -= 60;
+            Two_Y -= 60;
+            Three_Y -= 60;
+            Four_Y -= 60;
         }
 
         public void MoveDown()
         {
-            One_Y += 40;
-            Two_Y += 40;
-            Three_Y += 40;
-            Four_Y += 40;
+            One_Y += 60;
+            Two_Y += 60;
+            Three_Y += 60;
+            Four_Y += 60;
         }
     }
 }
