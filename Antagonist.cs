@@ -1,12 +1,9 @@
-﻿using System;
+﻿using System.Windows.Forms;
 using System.Drawing;
-using System.Windows.Forms;
+using System;
 
-public class Antagonist
+class Antagonist
 {
-    private int life = 500;
-    private bool isDead = false;
-
     public int One_X = 1280;
     public int One_Y = 0;
     public int Two_X = 1280;
@@ -15,22 +12,18 @@ public class Antagonist
     public int Three_Y = 50;
     public int Four_X = 780;
     public int Four_Y = 200;
-
-    public Image image;
-    private Panel pnl = null;
-
     private Scroller scroller;
-
-    Graphics g;
+    public Image image;
+    private Graphics g;
+    private bool isDead;
+    private int life = 500;
 
     public Antagonist(Scroller scroller, Graphics g, Image image)
     {
+        this.image = image;
         this.scroller = scroller;
         this.g = g;
-        this.image = image;
     }
-
-    WMPLib.WindowsMediaPlayer wmp;
 
     public bool experiencePain()
     {
@@ -42,7 +35,7 @@ public class Antagonist
         }
         return isDead;
     }
-    int isdeadfirsttime = -1;
+
     public void Draw()
     {
         if (!isDead)
@@ -53,19 +46,6 @@ public class Antagonist
             }
             catch (Exception e)
             {
-            }
-        }
-        else
-        {
-            if (1==10&&isdeadfirsttime == -1)
-            {
-                Form form = new Form();
-                form.Text = "You killed a TaNk~~!";
-                form.SetBounds(500, 500, 700, 20);
-                form.Show();
-                new System.Threading.ManualResetEvent(false).WaitOne(1750);
-                form.Close();
-                isdeadfirsttime = 0;
             }
         }
     }

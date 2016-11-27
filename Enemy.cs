@@ -1,6 +1,4 @@
-﻿using System;
-
-public class Enemy
+﻿public class Enemy
 {
     public int x, y;
     
@@ -12,7 +10,7 @@ public class Enemy
 
     public void moveLeft()
     {
-        x -= 10;
+        x -= 20;
     }
 
     public void moveUp()

@@ -1,119 +1,102 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using System.Drawing;
+using System;
 
-namespace WindowsFormsApplication4
+class Soldier
 {
-    class Soldier
+    public Image image;
+    public int life = 150000;
+    public int One_X = 1280;
+    public int One_Y = 0;
+    public int Two_X = 1280;
+    public int Two_Y = 200;
+    public int Three_X = 780;
+    public int Three_Y = 50;
+    public int Four_X = 780;
+    public int Four_Y = 200;
+    private Panel pnl;
+    private Graphics g;
+    private bool isDead;
+
+    public Soldier(Panel p, Image image)
     {
-        public Int64 life = 50000;
-        private bool isDead = false;
+        this.image = image;
+        pnl = p; 
+        g = pnl.CreateGraphics();
+    }
 
-        public int One_X = 1280;
-        public int One_Y = 0;
-        public int Two_X = 1280;
-        public int Two_Y = 200;
-        public int Three_X = 780;
-        public int Three_Y = 50;
-        public int Four_X = 780;
-        public int Four_Y = 200;
+    public int Life()
+    {
+        return this.life;
+    }
 
-        public Image image;
-        private Panel pnl = null;
-
-        Graphics g;
-
-        public Soldier(Panel p, Image image)
+    public bool experiencePain()
+    {
+        life = life -1;
+        if (life < 0)
         {
-            pnl = p; 
-            g = pnl.CreateGraphics();
-            this.image = image;
+            isDead = true;
+            Application.Exit();
         }
+        return isDead;
+    }
 
-        public Int64 Life()
+    public void Draw()
+    {
+        if (!isDead)
         {
-            return this.life;
-        }
-
-        public bool experiencePain()
-        {
-            life-=1;
-            if (life < 0)
+            try
             {
-                isDead = true;
-                Application.Exit();
-            }
-            return isDead;
-        }
-        int isdeadfirsttime = -1;
-        public void Draw()
-        {
-            if (!isDead)
+                g.DrawImage(image, Four_X, Four_Y, 98, 98);
+            } catch(Exception e)
             {
-                try
-                {
-                    g.DrawImage(image, Four_X, Four_Y, 228, 228);
-                } catch(Exception e)
-                {
-                }
-            }
-            else
-            {
-                if (1==10&&isdeadfirsttime == -1)
-                {
-                    Form form = new Form();
-                    form.Text = "You killed a TaNk~~!";
-                    form.SetBounds(500, 500, 700, 20);
-                    form.Show();
-                    new System.Threading.ManualResetEvent(false).WaitOne(1750);
-                    form.Close();
-                    isdeadfirsttime = 0;
-                }
+                g = pnl.CreateGraphics();
+                g.DrawImage(image, Four_X, Four_Y, 98, 98);
             }
         }
+    }
 
-        public void SetLocation(int x, int y)
-        {
-            One_X = x + 228;
-            Two_X = x + 228;
-            Three_X = x;
-            Four_X = x;
-            One_Y = y;
-            Two_Y = y + 228;
-            Three_Y = y + 228;
-            Four_Y = y;
-        }
+    public void SetLocation(int x, int y)
+    {
+        One_X = x + 98;
+        Two_X = x + 98;
+        Three_X = x;
+        Four_X = x;
+        One_Y = y;
+        Two_Y = y + 98;
+        Three_Y = y + 98;
+        Four_Y = y;
+    }
 
-        public void MoveLeft()
-        {
-            One_X -= 60;
-            Two_X -= 60;
-            Three_X -= 60;
-            Four_X -= 60;
-        }
+    public void MoveLeft()
+    {
+        One_X -= 32;
+        Two_X -= 32;
+        Three_X -= 32;
+        Four_X -= 32;
+    }
 
-        public void MoveRight()
-        {
-            One_X += 60;
-            Two_X += 60;
-            Three_X += 60;
-            Four_X += 60;
-        }
+    public void MoveRight()
+    {
+        One_X += 32;
+        Two_X += 32;
+        Three_X += 32;
+        Four_X += 32;
+    }
 
-        public void MoveUp()
-        {
-            One_Y -= 60;
-            Two_Y -= 60;
-            Three_Y -= 60;
-            Four_Y -= 60;
-        }
+    public void MoveUp()
+    {
+        One_Y -= 32;
+        Two_Y -= 32;
+        Three_Y -= 32;
+        Four_Y -= 32;
+    }
 
-        public void MoveDown()
-        {
-            One_Y += 60;
-            Two_Y += 60;
-            Three_Y += 60;
-            Four_Y += 60;
-        }
+    public void MoveDown()
+    {
+        One_Y += 32;
+        Two_Y += 32;
+        Three_Y += 32;
+        Four_Y += 32;
     }
 }
