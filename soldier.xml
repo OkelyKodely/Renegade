@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Soldier xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <life>150000</life>
+  <One_X>1280</One_X>
+  <One_Y>0</One_Y>
+  <Two_X>1280</Two_X>
+  <Two_Y>200</Two_Y>
+  <Three_X>780</Three_X>
+  <Three_Y>50</Three_Y>
+  <Four_X>780</Four_X>
+  <Four_Y>200</Four_Y>
+</Soldier>
