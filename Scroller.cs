@@ -40,7 +40,7 @@ public class Scroller
         g = panel.CreateGraphics();
         skull = Image.FromFile(Environment.CurrentDirectory + "\\skull.png");
         bg = Image.FromFile(Environment.CurrentDirectory + "\\bg_.png");
-        bg2 = Image.FromFile(Environment.CurrentDirectory + "\\bg_.jpg");
+        bg2 = bg;
         thebg = bg;
         thebg2 = bg2;
         antagonist = Image.FromFile(Environment.CurrentDirectory + "\\ant.png");
