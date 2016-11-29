@@ -17,6 +17,7 @@ class Glock
     private Graphics pi;
     private Graphics g;
     private int countBulleties = -1;
+    private Random r = new Random();
     
     public Glock(List<List<Enemy>> es, Panel pnl, Image explosion, Scroller scroller, Graphics g, int X, int Y, System.Collections.Generic.List<Antagonist> ant, Soldier soldier, Image image)
     {
@@ -94,6 +95,19 @@ class Glock
                                     }
                                 }).Start();
                                 e.Remove(e[j]);
+                                int ii = 0;
+                                while (ii < 10)
+                                {
+                                    int v = r.Next(ant.Count);
+                                    if (v >= 0 && v < ant.Count)
+                                    {
+                                        if (ant[v] != null)
+                                        {
+                                            ant.Remove(ant[v]);
+                                        }
+                                    }
+                                    ii = ii + 1;
+                                }
                                 soldier.life += 1000;
                             }
                         }
@@ -108,13 +122,20 @@ class Glock
         {
             for (int m = 0; m < B.Count; m++)
             {
-                if (ant[l].One_X >= B[m].whereami.X && ant[l].Four_X <= B[m].whereami.X)
+                if (ant[l].One_X + 100 >= B[m].whereami.X && ant[l].Four_X - 100 <= B[m].whereami.X)
                 {
-                    if (ant[l].One_Y <= B[m].whereami.Y && ant[l].Two_Y >= B[m].whereami.Y)
+                    if (ant[l].One_Y - 100 <= B[m].whereami.Y && ant[l].Two_Y + 100 >= B[m].whereami.Y)
                     {
-                        if (ant[l].One_X < 1400 && ant[l].One_X > 100)
+                        if (ant[l].One_X < 1280 && ant[l].One_X > 0)
                         {
                             Boolean isTankDead = ant[l].experiencePain();
+                            try
+                            {
+                                scroller.playSound("tink.mp3");
+                            }
+                            catch (Exception ex)
+                            {
+                            }
                             B[m].dead = true;
                             if (isTankDead)
                             {
