@@ -5,7 +5,7 @@ using System;
 
 class Mover
 {
-    private List<List<Enemy>> es;
+    private LEList es;
     private Image enmy, mylead;
     private Soldier soldier;
     private Panel pnl;
@@ -13,7 +13,7 @@ class Mover
     private Scroller scroller;
     private int put;
 
-    public Mover(List<List<Enemy>> es, Image enmy, int putted, Panel pnl, Soldier soldier, Image mylead, Scroller scroller)
+    public Mover(LEList es, Image enmy, int putted, Panel pnl, Soldier soldier, Image mylead, Scroller scroller)
     {
         this.scroller = scroller;
         this.pnl = pnl;
@@ -28,7 +28,7 @@ class Mover
     public void moveEnemiesLeft(object sender, EventArgs e)
     {
         Random r = new Random();
-        List<Enemy> ens = es[this.put];
+        EList ens = es[this.put];
         for (int i = 0; i < ens.Count; i++)
         {
             ens[i].moveLeft();

@@ -25,7 +25,7 @@ class Jets
         }
     }
 
-    public void moveEm(System.Collections.Generic.List<Antagonist> ant, Soldier soldier)
+    public void moveEm(AList ant, Soldier soldier)
     {
         scroller.playFile("jets.wav");
         new Thread(() =>

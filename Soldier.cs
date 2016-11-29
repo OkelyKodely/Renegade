@@ -2,9 +2,9 @@
 using System.Drawing;
 using System;
 
-class Soldier
+public class Soldier
 {
-    public Image image;
+    private bool isDead;
     public int life = 150000;
     public int One_X = 1280;
     public int One_Y = 0;
@@ -14,11 +14,18 @@ class Soldier
     public int Three_Y = 50;
     public int Four_X = 780;
     public int Four_Y = 200;
+    [System.Xml.Serialization.XmlIgnore]
     private Panel pnl;
+    [System.Xml.Serialization.XmlIgnore]
     private Graphics g;
-    private bool isDead;
+    [System.Xml.Serialization.XmlIgnore]
+    public Image image;
+    [System.Xml.Serialization.XmlIgnore]
+    private System.Windows.Forms.Timer timer1 = new System.Windows.Forms.Timer();
+    [System.Xml.Serialization.XmlIgnore]
+    private System.Windows.Forms.Timer timerstop = new System.Windows.Forms.Timer();
 
-    public Soldier(Panel p, Image image)
+    public void Setup(Panel p, Image image)
     {
         this.image = image;
         pnl = p; 
@@ -36,7 +43,6 @@ class Soldier
         if (life < 0)
         {
             isDead = true;
-            Application.Exit();
         }
         return isDead;
     }
@@ -50,10 +56,38 @@ class Soldier
                 g.DrawImage(image, Four_X, Four_Y, 98, 98);
             } catch(Exception e)
             {
-                g = pnl.CreateGraphics();
-                g.DrawImage(image, Four_X, Four_Y, 98, 98);
             }
         }
+    }
+
+    public void DrawWon()
+    {
+        timer1.Interval = 1000;
+        timer1.Tick += new EventHandler(DrawWonGo);
+        timer1.Start();
+
+        timerstop.Interval = 60 * 1000;
+        timerstop.Tick += new EventHandler(DrawWonStop);
+        timerstop.Start();
+    }
+
+    private void DrawWonGo(object sender, EventArgs e)
+    {
+        try
+        {
+            g.DrawImage(image, 150, 210, 980, 780);
+        }
+        catch (Exception ex)
+        {
+        }
+    }
+
+    private void DrawWonStop(object sender, EventArgs e)
+    {
+        timerstop.Stop();
+        timerstop.Dispose();
+        timer1.Stop();
+        timer1.Dispose();
     }
 
     public void SetLocation(int x, int y)

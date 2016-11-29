@@ -87,10 +87,6 @@ class Lead
                         isHeDead = soldier.experiencePain();
                     }
                     B[m].dead = true;
-                    if (isHeDead)
-                    {
-                        Application.Exit();
-                    }
                 }
             }
         }

@@ -8,8 +8,10 @@ class Glock
 {
     public int x, y;
     private System.Collections.Generic.List<GlockBullies> B;
-    private System.Collections.Generic.List<Antagonist> ant;
-    private System.Collections.Generic.List<List<Enemy>> es;
+    private System.Windows.Forms.Timer timer1 = new System.Windows.Forms.Timer();
+    private System.Windows.Forms.Timer timer2 = new System.Windows.Forms.Timer();
+    private AList ant;
+    private LEList es;
     private Scroller scroller;
     private Soldier soldier;
     private Panel pee;
@@ -19,7 +21,7 @@ class Glock
     private int countBulleties = -1;
     private Random r = new Random();
     
-    public Glock(List<List<Enemy>> es, Panel pnl, Image explosion, Scroller scroller, Graphics g, int X, int Y, System.Collections.Generic.List<Antagonist> ant, Soldier soldier, Image image)
+    public Glock(LEList es, Panel pnl, Image explosion, Scroller scroller, Graphics g, int X, int Y, AList ant, Soldier soldier, Image image)
     {
         this.pee = pnl;
         this.pi = pee.CreateGraphics();
@@ -68,7 +70,7 @@ class Glock
                 {
                     for (int j = 0; j < es[i].Count; j++)
                     {
-                        List<Enemy> e = es[i];
+                        EList e = es[i];
                         for (int m = 0; m < B.Count; m++)
                         {
                             if (e[j].x >= B[m].whereami.X - 10 && e[j].x <= B[m].whereami.X + 10 && e[j].y >= B[m].whereami.Y - 10 && e[j].y <= B[m].whereami.Y + 10)
@@ -172,9 +174,6 @@ class Glock
         }
     }
 
-    System.Windows.Forms.Timer timer1 = new System.Windows.Forms.Timer();
-    System.Windows.Forms.Timer timer2 = new System.Windows.Forms.Timer();
-    
     public void exe(System.Collections.Generic.List<GlockBullies> bullies)
     {
         this.B = bullies;

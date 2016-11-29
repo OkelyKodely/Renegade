@@ -4,7 +4,7 @@ using System.Threading;
 using System.Drawing;
 using System;
 
-class Scroller
+public class Scroller
 {
     public WMPLib.WindowsMediaPlayer wmp = new WMPLib.WindowsMediaPlayer();
     public WMPLib.WindowsMediaPlayer wmp2 = new WMPLib.WindowsMediaPlayer();
@@ -12,11 +12,12 @@ class Scroller
     private System.Windows.Forms.Timer timer21 = new System.Windows.Forms.Timer();
     private System.Windows.Forms.Timer timer22 = new System.Windows.Forms.Timer();
     private Random rnd = new Random();
+    private Serializer serializer = new Serializer();
     private bool started = true;
     private Soldier soldier;
-    private List<List<Enemy>> es = new List<List<Enemy>>();
-    private List<Enemy> ens = new List<Enemy>();
-    private List<Antagonist> ant;
+    private LEList es = new LEList();
+    private EList ens = new EList();
+    private AList ant = new AList();
     private Image skull, heart, thebg, thebg2, bg, bg2, antt, antagonist, antagonist2, antagonist3, antagonist4, antagonist5, soldierimg, mylead, mybullet, myjet, myexplosion, enmy;
     private Panel panel = new Panel();
     private Form form = new Form();
@@ -54,10 +55,10 @@ class Scroller
         enmy = Image.FromFile(Environment.CurrentDirectory + "\\enemy.png");
         heart = Image.FromFile(Environment.CurrentDirectory + "\\heart.png");
         soldierimg = Image.FromFile(Environment.CurrentDirectory + "\\soldier.png");
-        soldier = new Soldier(panel, soldierimg);
+        soldier = new Soldier();
+        soldier.Setup(panel, soldierimg);
         soldier.SetLocation(10, 330);
         Random rend = new Random();
-        ant = new List<Antagonist>();
         for (int i = 0; i < 100; i++)
         {
             int v = rend.Next(5);
@@ -72,7 +73,9 @@ class Scroller
             else if (v == 4)
                 antt = antagonist5;
             antagonist = antt;
-            ant.Add(new Antagonist(this, g, antagonist));
+            Antagonist2 a1 = new Antagonist2();
+            a1.Setup(this, g, antagonist);
+            ant.Add(a1);
             v = rend.Next(5);
             if (v == 0)
                 antt = antagonist;
@@ -85,7 +88,9 @@ class Scroller
             else if (v == 4)
                 antt = antagonist5;
             antagonist = antt;
-            ant.Add(new Antagonist(this, g, antagonist));
+            Antagonist2 a2 = new Antagonist2();
+            a2.Setup(this, g, antagonist);
+            ant.Add(a2);
             v = rend.Next(5);
             if (v == 0)
                 antt = antagonist;
@@ -98,7 +103,9 @@ class Scroller
             else if (v == 4)
                 antt = antagonist5;
             antagonist = antt;
-            ant.Add(new Antagonist(this, g, antagonist));
+            Antagonist2 a3 = new Antagonist2();
+            a3.Setup(this, g, antagonist);
+            ant.Add(a3);
             v = rend.Next(5);
             if (v == 0)
                 antt = antagonist;
@@ -111,7 +118,9 @@ class Scroller
             else if (v == 4)
                 antt = antagonist5;
             antagonist = antt;
-            ant.Add(new Antagonist(this, g, antagonist));
+            Antagonist2 a4 = new Antagonist2();
+            a4.Setup(this, g, antagonist);
+            ant.Add(a4);
             v = rend.Next(5);
             if (v == 0)
                 antt = antagonist;
@@ -124,7 +133,9 @@ class Scroller
             else if (v == 4)
                 antt = antagonist5;
             antagonist = antt;
-            ant.Add(new Antagonist(this, g, antagonist));
+            Antagonist2 a5 = new Antagonist2();
+            a5.Setup(this, g, antagonist);
+            ant.Add(a5);
             v = (rend.Next(10) + 1) * 100 + 200; 
             ant[0 + i * 5].SetLocation(800+i*1280, v);
             v = (rend.Next(10) + 1) * 100 + 200; 
@@ -135,6 +146,35 @@ class Scroller
             ant[3 + i * 5].SetLocation(430 + i * 1280, v);
             v = (rend.Next(10) + 1) * 100 + 200;
             ant[4 + i * 5].SetLocation(530 + i * 1280, v);
+        }
+        Soldier testS = serializer.DeserializeSoldier();
+        if(testS != null)
+        if (testS.life > 0)
+        {
+            AList test = serializer.DeserializeAList();
+            if(test != null)
+            if (test.Count > 0)
+            {
+                ant = test;
+                soldier = testS;
+                soldier.Setup(panel, soldierimg);
+                for (int i = 0; i < ant.Count; i++)
+                {
+                    int v = rend.Next(5);
+                    if (v == 0)
+                        antt = antagonist;
+                    else if (v == 1)
+                        antt = antagonist2;
+                    else if (v == 2)
+                        antt = antagonist3;
+                    else if (v == 3)
+                        antt = antagonist4;
+                    else if (v == 4)
+                        antt = antagonist5;
+                    antagonist = antt;
+                    ant[i].Setup(this, g, antagonist);
+                }
+            }
         }
     }
 
@@ -218,7 +258,7 @@ class Scroller
 
         timer4_Tick(null, null);
 
-        timer5.Interval = 3 * 60 * 1000;
+        timer5.Interval = 1 * 60 * 1000;
         timer5.Tick += new EventHandler(timer5_Tick);
         timer5.Start();
 
@@ -254,13 +294,14 @@ class Scroller
         timer3.Tick += new EventHandler(timer3_Tick);
         timer3.Start();
 
-        timer4.Interval = 1 * 60 * 1000;
+        timer4.Interval = 1 * 10 * 1000;
         timer4.Tick += new EventHandler(timer4_Tick);
         timer4.Start();
     }
 
     public void timer4_Tick(object sender, EventArgs e)
     {
+        serializer.Serialize(soldier, ant);
         try
         {
             playMusic("war.mp3");
@@ -269,14 +310,9 @@ class Scroller
         }
         GC.Collect();
     }
-
+    private bool won = false;
     public void DrawLife()
     {
-        if (ant.Count <= 0)
-        {
-            MessageBox.Show("You won!");
-            Application.Exit();
-        }
         g.FillRectangle(new SolidBrush(Color.Black), new Rectangle(0, 0, 1280, 200));
         int remx = -20;
         int x = 0;
@@ -358,7 +394,7 @@ class Scroller
         {
             int w = rd.Next(700) + 400;
             int x = rd.Next(100) * 10;
-            Enemy en = new Enemy(w, x);
+            Enemy2 en = new Enemy2(w, x);
             ens.Add(en);
         }
         es.Add(ens);
@@ -403,6 +439,212 @@ class Scroller
     {
         x--;
         Draw();
+        if (soldier.life <= 0)
+        {
+            if (!won)
+            {
+                //MessageBox.Show("You lost!");
+                won = true;
+            }
+            soldier = new Soldier();
+            soldier.Setup(panel, soldierimg);
+            ant.Clear();
+            Random rend = new Random();
+            for (int i = 0; i < 100; i++)
+            {
+                int v = rend.Next(5);
+                if (v == 0)
+                    antt = antagonist;
+                else if (v == 1)
+                    antt = antagonist2;
+                else if (v == 2)
+                    antt = antagonist3;
+                else if (v == 3)
+                    antt = antagonist4;
+                else if (v == 4)
+                    antt = antagonist5;
+                antagonist = antt;
+                Antagonist2 a1 = new Antagonist2();
+                a1.Setup(this, g, antagonist);
+                ant.Add(a1);
+                v = rend.Next(5);
+                if (v == 0)
+                    antt = antagonist;
+                else if (v == 1)
+                    antt = antagonist2;
+                else if (v == 2)
+                    antt = antagonist3;
+                else if (v == 3)
+                    antt = antagonist4;
+                else if (v == 4)
+                    antt = antagonist5;
+                antagonist = antt;
+                Antagonist2 a2 = new Antagonist2();
+                a2.Setup(this, g, antagonist);
+                ant.Add(a2);
+                v = rend.Next(5);
+                if (v == 0)
+                    antt = antagonist;
+                else if (v == 1)
+                    antt = antagonist2;
+                else if (v == 2)
+                    antt = antagonist3;
+                else if (v == 3)
+                    antt = antagonist4;
+                else if (v == 4)
+                    antt = antagonist5;
+                antagonist = antt;
+                Antagonist2 a3 = new Antagonist2();
+                a3.Setup(this, g, antagonist);
+                ant.Add(a3);
+                v = rend.Next(5);
+                if (v == 0)
+                    antt = antagonist;
+                else if (v == 1)
+                    antt = antagonist2;
+                else if (v == 2)
+                    antt = antagonist3;
+                else if (v == 3)
+                    antt = antagonist4;
+                else if (v == 4)
+                    antt = antagonist5;
+                antagonist = antt;
+                Antagonist2 a4 = new Antagonist2();
+                a4.Setup(this, g, antagonist);
+                ant.Add(a4);
+                v = rend.Next(5);
+                if (v == 0)
+                    antt = antagonist;
+                else if (v == 1)
+                    antt = antagonist2;
+                else if (v == 2)
+                    antt = antagonist3;
+                else if (v == 3)
+                    antt = antagonist4;
+                else if (v == 4)
+                    antt = antagonist5;
+                antagonist = antt;
+                Antagonist2 a5 = new Antagonist2();
+                a5.Setup(this, g, antagonist);
+                ant.Add(a5);
+                v = (rend.Next(10) + 1) * 100 + 200;
+                ant[0 + i * 5].SetLocation(800 + i * 1280, v);
+                v = (rend.Next(10) + 1) * 100 + 200;
+                ant[1 + i * 5].SetLocation(630 + i * 1280, v);
+                v = (rend.Next(10) + 1) * 100 + 200;
+                ant[2 + i * 5].SetLocation(330 + i * 1280, v);
+                v = (rend.Next(10) + 1) * 100 + 200;
+                ant[3 + i * 5].SetLocation(430 + i * 1280, v);
+                v = (rend.Next(10) + 1) * 100 + 200;
+                ant[4 + i * 5].SetLocation(530 + i * 1280, v);
+            }
+            serializer.Serialize(soldier, ant);
+            Play();
+        }
+        else if (ant.Count == 0)
+        {
+            if (!won)
+            {
+                //MessageBox.Show("You won!");
+                won = true;
+            }
+            soldier.DrawWon();
+            //new System.Threading.ManualResetEvent(false).WaitOne(60 * 1000);
+            soldier = new Soldier();
+            soldier.Setup(panel, soldierimg);
+            ant.Clear();
+            Random rend = new Random();
+            for (int i = 0; i < 100; i++)
+            {
+                int v = rend.Next(5);
+                if (v == 0)
+                    antt = antagonist;
+                else if (v == 1)
+                    antt = antagonist2;
+                else if (v == 2)
+                    antt = antagonist3;
+                else if (v == 3)
+                    antt = antagonist4;
+                else if (v == 4)
+                    antt = antagonist5;
+                antagonist = antt;
+                Antagonist2 a1 = new Antagonist2();
+                a1.Setup(this, g, antagonist);
+                ant.Add(a1);
+                v = rend.Next(5);
+                if (v == 0)
+                    antt = antagonist;
+                else if (v == 1)
+                    antt = antagonist2;
+                else if (v == 2)
+                    antt = antagonist3;
+                else if (v == 3)
+                    antt = antagonist4;
+                else if (v == 4)
+                    antt = antagonist5;
+                antagonist = antt;
+                Antagonist2 a2 = new Antagonist2();
+                a2.Setup(this, g, antagonist);
+                ant.Add(a2);
+                v = rend.Next(5);
+                if (v == 0)
+                    antt = antagonist;
+                else if (v == 1)
+                    antt = antagonist2;
+                else if (v == 2)
+                    antt = antagonist3;
+                else if (v == 3)
+                    antt = antagonist4;
+                else if (v == 4)
+                    antt = antagonist5;
+                antagonist = antt;
+                Antagonist2 a3 = new Antagonist2();
+                a3.Setup(this, g, antagonist);
+                ant.Add(a3);
+                v = rend.Next(5);
+                if (v == 0)
+                    antt = antagonist;
+                else if (v == 1)
+                    antt = antagonist2;
+                else if (v == 2)
+                    antt = antagonist3;
+                else if (v == 3)
+                    antt = antagonist4;
+                else if (v == 4)
+                    antt = antagonist5;
+                antagonist = antt;
+                Antagonist2 a4 = new Antagonist2();
+                a4.Setup(this, g, antagonist);
+                ant.Add(a4);
+                v = rend.Next(5);
+                if (v == 0)
+                    antt = antagonist;
+                else if (v == 1)
+                    antt = antagonist2;
+                else if (v == 2)
+                    antt = antagonist3;
+                else if (v == 3)
+                    antt = antagonist4;
+                else if (v == 4)
+                    antt = antagonist5;
+                antagonist = antt;
+                Antagonist2 a5 = new Antagonist2();
+                a5.Setup(this, g, antagonist);
+                ant.Add(a5);
+                v = (rend.Next(10) + 1) * 100 + 200;
+                ant[0 + i * 5].SetLocation(800 + i * 1280, v);
+                v = (rend.Next(10) + 1) * 100 + 200;
+                ant[1 + i * 5].SetLocation(630 + i * 1280, v);
+                v = (rend.Next(10) + 1) * 100 + 200;
+                ant[2 + i * 5].SetLocation(330 + i * 1280, v);
+                v = (rend.Next(10) + 1) * 100 + 200;
+                ant[3 + i * 5].SetLocation(430 + i * 1280, v);
+                v = (rend.Next(10) + 1) * 100 + 200;
+                ant[4 + i * 5].SetLocation(530 + i * 1280, v);
+            }
+            serializer.Serialize(soldier, ant);
+            Play();
+        }
     }
 
     private void timer2_Tick(object sender, EventArgs e)
@@ -417,7 +659,7 @@ class Scroller
                     {
                         for (int j = 0; j < es[i].Count; j++)
                         {
-                            List<Enemy> en = es[i];
+                            EList en = es[i];
                             if (en[j].x <= soldier.One_X && en[j].x >= soldier.Four_X &&
                                 en[j].y >= soldier.One_Y && en[j].y <= soldier.Two_Y)
                             {
